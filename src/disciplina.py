@@ -2,11 +2,21 @@ from bs4.element import Tag
 
 class Disciplina:
 
-    id = 0
+    # id = 0
 
-    def __init__(self, html:Tag = None, nivel:int=None, cod:str=None, name:str=None, horas:int=None, tipo:str=None, pre:str=None,natureza:str=None):
-        self.id = Disciplina.id
-        Disciplina.id += 1
+    def __init__(
+        self, 
+        html:Tag = None,
+        id:int=None,
+        nivel:int=None, 
+        cod:str=None, 
+        name:str=None, 
+        horas:int=None, 
+        tipo:str=None, 
+        pre:str=None,
+        natureza:str=None
+    ):
+        self.id = id
         self.html = html
         self.nivel = nivel
         self.cod = cod
@@ -16,7 +26,7 @@ class Disciplina:
         self.pre = pre
         self.natureza = natureza
         self.creditos = None
-        self.montaHtml()   
+        # self.montaHtml()   
 
 
     def dic(self): return {k: v for k, v in self.__dict__.items() if k != "html"}
