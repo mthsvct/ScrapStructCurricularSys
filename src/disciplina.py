@@ -2,7 +2,7 @@ from bs4.element import Tag
 
 class Disciplina:
 
-    # id = 0
+    id = 0
 
     def __init__(
         self, 
@@ -14,9 +14,11 @@ class Disciplina:
         horas:int=None, 
         tipo:str=None, 
         pre:str=None,
-        natureza:str=None
+        natureza:str=None,
+        creditos=None
     ):
-        self.id = id
+        self.id = id if id else Disciplina.id
+        Disciplina.id += 1
         self.html = html
         self.nivel = nivel
         self.cod = cod
@@ -25,23 +27,20 @@ class Disciplina:
         self.tipo = tipo
         self.pre = pre
         self.natureza = natureza
-        self.creditos = None
-        # self.montaHtml()   
+        self.creditos = creditos
 
+        if html != None: 
+            self.montaHtml()
 
     def dic(self): return {k: v for k, v in self.__dict__.items() if k != "html"}
-
     def __str__(self): return "".join([f"{k}: {v}\n" for k, v in self.dic().items()])+'\n'
-
-    def __repr__(self): return f"{self.id}, {self.cod}, {self.name}, {self.nivel}, {self.natureza}"
-
+    def __repr__(self): return f"{self.id}, {self.cod}, {self.name}, {self.horas}h, {self.nivel}, {self.natureza}"
 
     def montaHtml(self):
         self.cod, n, h, self.tipo, p, _, self.natureza = [ i.text.strip().replace("\n", ";").replace("\t", "") for i in self.html.find_all("td") ]
         self.name = n.split(" - ")[0]
         self.horas, self.creditos = self.montaHoras(n, h)
         self.pre = self.montaPre(p)
-
 
     def montaHoras(self, n:str, h:str):
         # Exemplo:
@@ -53,7 +52,6 @@ class Disciplina:
         lab = int(h.split(" ; ")[1].split(" (")[0].replace("h", ""))
         return hrs, {"creditos": creditos, "aula": aula, "lab": lab}
     
-
     def montaPre(self, pre:str):
         # ex = "( ( SINF/CSHNB007 OU SINF/CSHNB010  ) E ( CHN0730 ) )"
         # ex2 = "( ( SINF/CSHNB007 E SINF/CSHNB010 E SINF/CSHNB032 ) OU ( SINF/CSHNB019 E SINF/CSHNB030 ) )"
